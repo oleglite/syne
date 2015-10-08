@@ -2,10 +2,10 @@ from itertools import product
 from collections import defaultdict
 
 
-class Incubator:
+class Incubator(object):
     def __init__(self, conf):
         self.conf = conf
-        self.samples = defaultdict(float)     # {binary_sample: weight}
+        self.samples = defaultdict(float)     # {sample: weight}
 
     def add(self, message):    # return list of Patterns (matrixes?)
         self._update_samples(message)
@@ -19,26 +19,33 @@ class Incubator:
         return new_patterns
 
     def _update_samples(self, message):
-        original_samples = product(*message)    # TODO!!!!  save impulses!
-        
-        # get binary representation for each sample
-        all_samples = {
-            sample: self._make_binary_sample(sample)
-            for sample in original_samples
-        }
+        all_samples = make_samples(self.conf.INCUBATOR_ACTIVITY_THRESHOLD, message)
 
         # leave only best copy of each binary sample
-        binary_samples = {}
-        for sample, binary_sample in all_samples.items():
-            sample_activity = sum(sample) / len(sample)
-            if binary_samples.get(binary_sample, 0) < sample_activity:
-                binary_samples[binary_sample] = sample_activity
+        result_samples = {}
+        for sample, activity in all_samples.iteritems():
+            if len(sample) - sample.count(None) < self.conf.INCUBATOR_MIN_SAMPLE_IMPULSES:
+                continue
 
-        for binary_sample, sample_activity in binary_samples.items():
-            self.samples[binary_sample] += sample_activity
+            if result_samples.get(sample, 0) < activity:
+                result_samples[sample] = activity
 
-    def _make_binary_sample(self, sample):
-        return tuple(int(a >= self.conf.INCUBATOR_ACTIVITY_THRESHOLD) for a in sample)
+        for sample, activity in result_samples.iteritems():
+            self.samples[sample] += activity
 
     def _make_pattern(self, sample):
         pass
+
+
+def make_samples(threshold, message):
+    assert message, "Message can't be empty"
+    assert all(len(s) == len(message[0]) for s in message), "All signals should have equal size"
+
+    res = {}
+    for impulses in product(xrange(len(message[0])), repeat=len(message)):
+        values = [message[n][i] for n, i in enumerate(impulses)]
+        sample = tuple(i if v >= threshold else None for v, i in zip(values, impulses))
+        activity = (sum(values) / len(values))
+        res[sample] = activity
+
+    return res
