@@ -3,6 +3,7 @@ import pickle
 import pyaudio
 import random
 import sys
+import time
 
 
 def log(msg):
@@ -29,7 +30,7 @@ class Sound(object):
         self.record_seconds = 5
         self.frames = b''
 
-        self.time_for_symbol = 2
+        self.time_for_symbol = 1
         self.symbols_in_session = 10
         self.alphabet = ['1', '_']
         self.symbols = ''
@@ -72,7 +73,7 @@ class Sound(object):
         log("* recording")
 
         frames = []
-        symbols = ''.join(random.choice(self.alphabet) for _ in xrange(self.symbols_in_session))
+        symbols = self._generate_symbols()
 
         for symbol in symbols:
             self._show_symbol(symbol)
@@ -106,6 +107,8 @@ class Sound(object):
 
         self._pyaudio_obj = pyaudio.PyAudio()
 
+        time.sleep(1)
+
         self._stream = self._pyaudio_obj.open(
             format=self.format,
             channels=self.channels,
@@ -128,6 +131,9 @@ class Sound(object):
 
     def _frame_size(self):
         return self._pyaudio_obj.get_sample_size(self.format)
+
+    def _generate_symbols(self):
+        return ''.join(random.choice(self.alphabet) for _ in xrange(self.symbols_in_session))
 
 
 def record():
