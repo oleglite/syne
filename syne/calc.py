@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 
 class Matrix:
     def __init__(self, data):
@@ -20,6 +18,10 @@ class Matrix:
 
         self.data = list(map(list, data))
 
+    @classmethod
+    def create(cls, w, h, values=0.0):
+        return cls([[values] * w for _ in xrange(h)])
+
     def set(self, y, x, value):
         self.data[y][x] = value
 
@@ -31,3 +33,15 @@ class Matrix:
 
     def col(self, x):
         return list(v[x] for v in self.data)
+
+
+def matrix_similarity(m1, m2):
+    return 0.0
+
+
+def list_similarity(l1, l2):
+    return 0.0
+
+
+def braking_add(a, b):
+    return a + (1 - b) * a

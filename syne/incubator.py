@@ -1,6 +1,9 @@
 from itertools import product
 from collections import defaultdict
 
+from syne.calc import list_similarity, braking_add, Matrix
+from syne.tools import avg
+
 
 class Incubator(object):
     def __init__(self, conf):
@@ -11,8 +14,13 @@ class Incubator(object):
         self._update_samples(message)
 
         new_patterns = []
-        while max(self.samples.values()) >= self.conf.INCUBATOR_READY_SAMPLE_WEIGHT:
-            top_samples = [sample for sample, weight in self.samples.items()]
+        while True:
+            max_weight = max(self.samples.itervalues())
+            if max_weight < self.conf.INCUBATOR_READY_SAMPLE_WEIGHT:
+                break
+
+            top_samples = [sample for sample, weight in self.samples.items()
+                           if weight == max_weight]
             top_sample = top_samples[0]     # TODO: use random
             new_patterns.append(self._make_pattern(top_sample))
 
@@ -33,8 +41,33 @@ class Incubator(object):
         for sample, activity in result_samples.iteritems():
             self.samples[sample] += activity
 
-    def _make_pattern(self, sample):
-        pass
+    def _make_pattern(self, base_sample):
+        base_sample_weight = self.samples.pop(base_sample)
+        base_weight = self.conf.INCUBATOR_NEW_PATTERN_IMPULSE_WEIGHT
+
+        # find similar samples
+        similar_samples = {}
+        for sample, sample_weight in self.samples.items():
+            activity = list_similarity(base_sample, sample)
+            if activity >= self.conf.INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY:
+                similar_samples[sample] = sample_weight
+                del self.samples[sample]
+
+        # create pattern from base sample
+        pattern = Matrix.create(self.conf.UNIT_INPUT_WIDTH, self.conf.UNIT_INPUT_HEIGHT)
+        for x, impulse in enumerate(base_sample):
+            if impulse:
+                pattern.set(impulse, x, base_weight)
+
+        # add similar samples to pattern
+        for sample, sample_weight in similar_samples.iteritems():
+            adding_weight = sample_weight / base_sample_weight * base_weight
+            for x, impulse in enumerate(sample):
+                if impulse:
+                    new_weight = braking_add(pattern.get(impulse, x), adding_weight)
+                    pattern.set(impulse, x, new_weight)
+
+        return pattern
 
 
 def make_samples(threshold, message):
@@ -45,7 +78,7 @@ def make_samples(threshold, message):
     for impulses in product(xrange(len(message[0])), repeat=len(message)):
         values = [message[n][i] for n, i in enumerate(impulses)]
         sample = tuple(i if v >= threshold else None for v, i in zip(values, impulses))
-        activity = (sum(values) / len(values))
+        activity = avg(values)
         res[sample] = activity
 
     return res
