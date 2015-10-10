@@ -1,3 +1,4 @@
 argh==0.26.1
 PyAudio==0.2.8
 pytest==2.8.2
+pprintpp==0.2.3

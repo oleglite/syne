@@ -7,5 +7,9 @@ def avg(it):
     except TypeError:
         it = list(it)
         length = len(it)
-    return sum(it) / length
+
+    if length == 0:
+        return 0
+
+    return sum(it) / float(length)
 
