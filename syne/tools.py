@@ -1,6 +1,11 @@
 # coding: utf-8
 
 
-def avg(arr):
-    return sum(arr) / len(arr)
+def avg(it):
+    try:
+        length = len(it)
+    except TypeError:
+        it = list(it)
+        length = len(it)
+    return sum(it) / length
 

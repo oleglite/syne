@@ -1,7 +1,7 @@
 from itertools import product
 from collections import defaultdict
 
-from syne.calc import list_similarity, braking_add, Matrix
+from syne.calc import similarity, braking_add, Matrix
 from syne.tools import avg
 
 
@@ -48,7 +48,7 @@ class Incubator(object):
         # find similar samples
         similar_samples = {}
         for sample, sample_weight in self.samples.items():
-            activity = list_similarity(base_sample, sample)
+            activity = similarity(base_sample, sample)
             if activity >= self.conf.INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY:
                 similar_samples[sample] = sample_weight
                 del self.samples[sample]

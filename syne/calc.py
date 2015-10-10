@@ -1,3 +1,7 @@
+from itertools import izip, chain
+
+from syne.tools import avg
+
 
 class Matrix:
     def __init__(self, data):
@@ -36,11 +40,16 @@ class Matrix:
 
 
 def matrix_similarity(m1, m2):
-    return 0.0
+    assert m1.w == m2.w and m1.h == m2.h, 'Matrixes should have same size'
+
+    return similarity(chain(*m1.data), chain(*m2.data))
 
 
-def list_similarity(l1, l2):
-    return 0.0
+def similarity(it1, it2):
+    difs = (1.0 if None in (x, y) else (x - y) ** 2 for x, y in izip(it1, it2))
+    res = 1 - avg(difs) ** 0.5
+    assert 0 <= res <= 1, 'Similarity should be in range from 0 to 1'
+    return res
 
 
 def braking_add(a, b):
