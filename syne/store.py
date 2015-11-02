@@ -9,16 +9,14 @@ class Store(object):
     Stores limited number of objects with weights,
     removes objects with low weight when store is full.
     """
-    def __init__(self, objects, weights, max_size, min_weight=-1000, max_weight=1000):
-        """
-        normalized: when False do normalizing in init
-        """
+    def __init__(self, objects, weights, max_size, min_weight=-1000, max_weight=1000,
+                 normal_weight=0):
         self._objects = objects
         self._weights = weights
         self._max_size = max_size
         self._min_weight = min_weight
         self._max_weight = max_weight
-        self._avg_weight = (min_weight + max_weight) / 2.0
+        self._normal_weight = normal_weight
 
         self._compact()
         self.normalize()
@@ -39,7 +37,7 @@ class Store(object):
         if max(self._weights) > self._max_weight:
             self._descrease_all()
 
-        while avg(self._weights) > self._avg_weight:
+        while avg(self._weights) > self._normal_weight:
             self._descrease_all()
 
     def add(self, obj):

@@ -45,7 +45,7 @@ def test_increase():
     assert store.get_weights() == [11, -10, -8]
 
 
-def test_normalize_by_average():
+def test_normalize_by_default_normal_weight():
     store = Store([1, 2, 3], [1, 2, 3], 3, min_weight=-10, max_weight=10)
 
     assert store.get_objects() == [1, 2, 3]
@@ -55,6 +55,18 @@ def test_normalize_by_average():
     store.normalize()
     assert store.get_objects() == [1, 2, 3]
     assert store.get_weights() == [-1, -1, 0]
+
+
+def test_normalize_by_normal_weight():
+    store = Store([1, 2, 3], [1, 2, 3], 3, min_weight=-10, max_weight=10, normal_weight=2)
+
+    assert store.get_objects() == [1, 2, 3]
+    assert store.get_weights() == [1, 2, 3]
+
+    store.increase(0)
+    store.normalize()
+    assert store.get_objects() == [1, 2, 3]
+    assert store.get_weights() == [1, 1, 2]
 
 
 def test_normalize_by_max():
