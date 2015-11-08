@@ -1,5 +1,5 @@
+from syne.core import Core
 from syne.incubator import Incubator
-from syne.matrix import similarity
 from syne.tools import avg
 
 
@@ -14,7 +14,7 @@ class Unit(object):
         """
         message: matrix
         prediction: vector
-        return: vector
+        return: vector or None
         """
         output_signal = self.core.activate(message, prediction)
         output_activity = avg(output_signal)
@@ -27,30 +27,15 @@ class Unit(object):
         return output_signal
 
     def decode(self, signal):
+        """
+        signal: vector
+        return: matrix or None
+        """
         return self.core.decode(signal)
 
     def restore(self, message):
-        pass
+        if not any(signal is None for signal in message):
+            return message
 
-
-class Core(object):
-    def __init__(self, conf):
-        self.conf = conf
-
-        self._patterns = []
-
-    def activate(self, message, prediction):
-        result = []
-        for pattern in self._patterns:
-            activity = similarity(message, pattern)
-            result.append(activity)
-
-        # TODO: add prediction
-
-        return result
-
-    def decode(self, signal):
-        return []
-
-    def add_patterns(self, new_patterns):
+        # TODO: first need to implement in Core to allow None signals in message
         pass

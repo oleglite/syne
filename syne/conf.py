@@ -8,6 +8,17 @@ UNIT_INPUT_WIDTH = 4
 # Height of unit patterns and number of possible impulses in input
 UNIT_INPUT_HEIGHT = 256
 
+# Max number of patterns in this unit and input height for higher level unit
+UNIT_OUTPUT_HEIGHT = 256
+
+# Weight limits for patterns in Store
+UNIT_MAX_PATTERN_WEIGHT = 1000
+UNIT_MIN_PATTERN_WEIGHT = -1000
+
+# New patterns are always added with weight = 0.
+# This setting allows to add new patterns with weight below the average
+UNIT_AVERAGE_PATTERN_WEIGHT = 400
+
 # If activity of impulse greater then this value, incubator counts it as active
 INCUBATOR_IMPULSE_ACTIVITY_THRESHOLD = 0.5
 

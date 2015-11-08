@@ -8,3 +8,9 @@ def impulses(signal):
 
 
 sample = (None, 0, 1, 4, None)  # None - not active, number - impulse
+
+pattern = Matrix([  # matrix like message, but with weights
+    [0.1, 0.8],
+    [0.4, 0.3],
+    [0.0, 0.9],
+])

@@ -2,23 +2,7 @@
 
 from syne.calc import Matrix
 from syne.incubator import Incubator, make_samples
-
-
-def get_conf(**kwargs):
-    # default conf for tests
-    class conf:
-        UNIT_INPUT_WIDTH = 2
-        UNIT_INPUT_HEIGHT = 2
-
-        INCUBATOR_ACTIVITY_THRESHOLD = 0.5
-        INCUBATOR_READY_SAMPLE_WEIGHT = 1
-        INCUBATOR_MIN_SAMPLE_IMPULSES = 1
-        INCUBATOR_NEW_PATTERN_IMPULSE_WEIGHT = 0.7
-        INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY = 0.6
-
-    conf.__dict__.update(kwargs)
-
-    return conf
+from test.tools import get_conf
 
 
 def test_make_samples():

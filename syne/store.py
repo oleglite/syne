@@ -10,13 +10,13 @@ class Store(object):
     removes objects with low weight when store is full.
     """
     def __init__(self, objects, weights, max_size, min_weight=-1000, max_weight=1000,
-                 normal_weight=0):
+                 average_weight=0):
         self._objects = objects
         self._weights = weights
         self._max_size = max_size
         self._min_weight = min_weight
         self._max_weight = max_weight
-        self._normal_weight = normal_weight
+        self._average_weight = average_weight
 
         self._compact()
         self.normalize()
@@ -35,10 +35,10 @@ class Store(object):
             return
 
         if max(self._weights) > self._max_weight:
-            self._descrease_all()
+            self._decrease_all()
 
-        while avg(self._weights) > self._normal_weight:
-            self._descrease_all()
+        while avg(self._weights) > self._average_weight:
+            self._decrease_all()
 
     def add(self, obj):
         self._objects.append(obj)
@@ -55,7 +55,7 @@ class Store(object):
             to_remove_index = self._weights.index(min_weight)
             self.remove(to_remove_index)
 
-    def _descrease_all(self):
+    def _decrease_all(self):
         self._weights = [
             limited_add(w, -1, self._min_weight, self._max_weight)
             for w in self._weights
