@@ -18,6 +18,7 @@ def get_conf(**kwargs):
         INCUBATOR_NEW_PATTERN_IMPULSE_WEIGHT = 0.7
         INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY = 0.6
 
-    conf.__dict__.update(kwargs)
+    for kwarg, value in kwargs.items():
+        setattr(conf, kwarg, value)
 
     return conf

@@ -21,7 +21,7 @@ class Incubator(object):
 
         new_patterns = []
         while True:
-            max_weight = max(self._samples.itervalues()) if self._samples else 0
+            max_weight = max(self._samples.values()) if self._samples else 0
             if max_weight < self.conf.INCUBATOR_READY_SAMPLE_WEIGHT:
                 break
 
@@ -46,7 +46,7 @@ class Incubator(object):
             if result_samples.get(sample, 0) < activity:
                 result_samples[sample] = activity
 
-        for sample, activity in result_samples.iteritems():
+        for sample, activity in result_samples.items():
             self._samples[sample] += activity
 
     def _make_pattern(self, base_sample):
@@ -55,7 +55,7 @@ class Incubator(object):
 
         # find similar samples
         similar_samples = {}
-        for sample, sample_weight in self._samples.items():
+        for sample, sample_weight in dict(self._samples).items():
             activity = similarity(base_sample, sample)
             if activity >= self.conf.INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY:
                 similar_samples[sample] = sample_weight
@@ -68,7 +68,7 @@ class Incubator(object):
                 pattern.set(impulse, x, base_weight)
 
         # add similar samples to pattern
-        for sample, sample_weight in similar_samples.iteritems():
+        for sample, sample_weight in similar_samples.items():
             adding_weight = sample_weight / base_sample_weight * base_weight
             for x, impulse in enumerate(sample):
                 if impulse is not None:
@@ -82,7 +82,7 @@ def make_samples(threshold, message):
     assert message, "Message can't be empty"
     assert all(len(s) == len(message[0]) for s in message), "All signals should have equal size"
 
-    for impulses in product(xrange(len(message[0])), repeat=len(message)):
+    for impulses in product(range(len(message[0])), repeat=len(message)):
         values = [message[n][i] for n, i in enumerate(impulses)]
         sample = tuple(i if v >= threshold else None for v, i in zip(values, impulses))
         activity = avg(values)

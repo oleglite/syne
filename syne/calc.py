@@ -1,4 +1,4 @@
-from itertools import izip, chain
+from itertools import chain
 from pprintpp import pformat
 
 from syne.tools import avg
@@ -25,7 +25,7 @@ class Matrix:
 
     @classmethod
     def create(cls, w, h, values=0.0):
-        return cls([[values] * w for _ in xrange(h)])
+        return cls([[values] * w for _ in range(h)])
 
     def set(self, y, x, value):
         self._data[y][x] = value
@@ -58,14 +58,14 @@ def matrix_similarity(m1, m2):
     it2 = chain(*m2.get_data())
 
     # compare matrix cells with same coords
-    difs = ((x - y) ** 2 for x, y in izip(it1, it2))
+    difs = ((x - y) ** 2 for x, y in zip(it1, it2))
     res = 1 - avg(difs) ** 0.5
     assert 0 <= res <= 1, 'Similarity should be in range from 0 to 1'
     return res
 
 
 def similarity(it1, it2):
-    return avg(int(x == y) for x, y in izip(it1, it2))
+    return avg(int(x == y) for x, y in zip(it1, it2))
 
 
 def braking_add(a, b):
