@@ -16,7 +16,14 @@ class Incubator(object):
     def get_samples(self):
         return dict(self._samples)
 
-    def add(self, message):    # return list of Patterns (matrixes?)
+    def add(self, message):
+        """
+        Add message to incubator. The main method of incubator.
+
+
+        :param message: tuple of samples
+        :return: list of Patterns (matrixes?)
+        """
         self._update_samples(message)
 
         new_patterns = []

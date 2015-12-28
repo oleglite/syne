@@ -13,3 +13,13 @@ def avg(it):
 
     return sum(it) / float(length)
 
+
+def object_to_dict(obj):
+    return {key: getattr(obj, key) for key in dir(obj) if not key.startswith('_')}
+
+
+def dict_to_object(d):
+    class obj: pass
+    for key, value in d.items():
+        setattr(obj, key, value)
+    return obj

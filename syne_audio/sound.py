@@ -27,9 +27,9 @@ def chunks(arr, size):
 class Sound(object):
     def __init__(self):
         self.chunk_size = 1000
-        self.format = pyaudio.paInt16
+        self.format = pyaudio.paInt8
         self.channels = 1
-        self.rate = 48000
+        self.rate = 16000
         self.record_seconds = 5
         self.frames = b''
 
