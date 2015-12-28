@@ -69,28 +69,27 @@ class Incubator(object):
                 del self._samples[sample]
 
         # create pattern from base sample
-        pattern = Matrix.create(self.conf.UNIT_INPUT_WIDTH, self.conf.UNIT_INPUT_HEIGHT)
+        pattern = Matrix.create(self.conf.UNIT_INPUT_HEIGHT, self.conf.UNIT_INPUT_WIDTH)
         for x, impulse in enumerate(base_sample):
             if impulse is not None:
-                pattern.set(impulse, x, base_weight)
+                pattern.set(x, impulse, base_weight)
 
         # add similar samples to pattern
         for sample, sample_weight in similar_samples.items():
             adding_weight = sample_weight / base_sample_weight * base_weight
             for x, impulse in enumerate(sample):
                 if impulse is not None:
-                    new_weight = braking_add(pattern.get(impulse, x), adding_weight)
-                    pattern.set(impulse, x, new_weight)
+                    new_weight = braking_add(pattern.get(x, impulse), adding_weight)
+                    pattern.set(x, impulse, new_weight)
 
         return pattern
 
 
 def make_samples(threshold, message):
     assert message, "Message can't be empty"
-    assert all(len(s) == len(message[0]) for s in message), "All signals should have equal size"
 
-    for impulses in product(range(len(message[0])), repeat=len(message)):
-        values = [message[n][i] for n, i in enumerate(impulses)]
+    for impulses in product(range(message.w), repeat=message.h):
+        values = [message.get(n, i) for n, i in enumerate(impulses)]
         sample = tuple(i if v >= threshold else None for v, i in zip(values, impulses))
-        activity = avg(values)
+        activity = avg(v if v >= threshold else 0 for v in values)
         yield sample, activity

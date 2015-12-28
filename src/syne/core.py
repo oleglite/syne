@@ -10,7 +10,7 @@ class Core(object):
 
         self._patterns_store = Store(
             [], [],
-            self.conf.UNIT_OUTPUT_HEIGHT,
+            self.conf.UNIT_OUTPUT_WIDTH,
             min_weight=self.conf.UNIT_MIN_PATTERN_WEIGHT,
             max_weight=self.conf.UNIT_MAX_PATTERN_WEIGHT,
             average_weight=self.conf.UNIT_AVERAGE_PATTERN_WEIGHT
@@ -30,7 +30,7 @@ class Core(object):
         return result_signal
 
     def _activate(self, message):
-        result_signal = [0.0] * self.conf.UNIT_OUTPUT_HEIGHT
+        result_signal = [0.0] * self.conf.UNIT_OUTPUT_WIDTH
         for i, pattern in enumerate(self._patterns_store.get_objects()):
             activity = matrix_similarity(message, pattern)
             result_signal[i] = activity
@@ -39,7 +39,7 @@ class Core(object):
         return result_signal if activated else None
 
     def decode(self, signal):
-        assert len(signal) == self.conf.UNIT_OUTPUT_HEIGHT
+        assert len(signal) == self.conf.UNIT_OUTPUT_WIDTH
 
         candidates = []
         for activity, pattern in zip(signal, self._patterns_store.get_objects()):

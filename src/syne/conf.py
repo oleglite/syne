@@ -2,14 +2,14 @@
 # If message's average activity less than this value, this message goes to incubator
 UNIT_ACTIVE_SIGNAL_ACTIVITY = 0.4
 
-# Width of unit patterns and number of child units
-UNIT_INPUT_WIDTH = 4
+# Height of unit patterns and number of child units
+UNIT_INPUT_HEIGHT = 4
 
-# Height of unit patterns and number of possible impulses in input
-UNIT_INPUT_HEIGHT = 256
+# Width of unit patterns and number of possible impulses in input
+UNIT_INPUT_WIDTH = 256
 
-# Max number of patterns in this unit and input height for higher level unit
-UNIT_OUTPUT_HEIGHT = 256
+# Max number of patterns in this unit and input width for higher level unit
+UNIT_OUTPUT_WIDTH = 256
 
 # Weight limits for patterns in Store
 UNIT_MAX_PATTERN_WEIGHT = 1000

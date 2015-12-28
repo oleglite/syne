@@ -18,20 +18,20 @@ class Matrix:
 
         assert all(len(v) == len(data[0]) for v in data)
 
-        self.w = len(data[0])
         self.h = len(data)
+        self.w = len(data[0])
 
         self._data = list(map(list, data))
 
     @classmethod
-    def create(cls, w, h, values=0.0):
+    def create(cls, h, w, values=0.0):
         return cls([[values] * w for _ in range(h)])
 
-    def set(self, y, x, value):
-        self._data[y][x] = value
+    def set(self, x, y, value):
+        self._data[x][y] = value
 
-    def get(self, y, x):
-        return self._data[y][x]
+    def get(self, x, y):
+        return self._data[x][y]
 
     def row(self, y):
         return self._data[y]
@@ -46,6 +46,9 @@ class Matrix:
         if type(other) != type(self):
             return False
         return self._data == other.get_data()
+
+    def __len__(self):
+        return self.h
 
     def __repr__(self):
         return 'Matrix(%s)' % pformat(self._data)

@@ -10,14 +10,14 @@ class Unit(object):
         self.incubator = Incubator(conf)
         self.core = Core(conf)
 
-    def activate(self, message, prediction):
+    def activate(self, message, prediction=None):
         """
         message: matrix
         prediction: vector
         return: vector or None
         """
         output_signal = self.core.activate(message, prediction)
-        output_activity = avg(output_signal)
+        output_activity = avg(output_signal) if output_signal else 0
 
         if output_activity < self.conf.UNIT_ACTIVE_SIGNAL_ACTIVITY:
             new_patterns = self.incubator.add(message)

@@ -1,4 +1,4 @@
-signal1 = (0.1, 0.2, 0.3)   # (activity, activity, ...)
+signal1 = (0.1, 0.2, 0.3)   # (activity, activity, ...) signal is activities of different impulses from one source (lower unit or sensor)
 signal2 = (0.0, 0.7, 0.2)
 message = (signal1, signal2)
 

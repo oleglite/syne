@@ -6,9 +6,9 @@ from test.tools import get_conf
 
 def test_core():
     core = Core(get_conf(
-        UNIT_INPUT_WIDTH=2,
         UNIT_INPUT_HEIGHT=2,
-        UNIT_OUTPUT_HEIGHT=10
+        UNIT_INPUT_WIDTH=2,
+        UNIT_OUTPUT_WIDTH=10
     ))
 
     res = core.activate([
