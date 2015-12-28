@@ -6,18 +6,21 @@ import sys
 import time
 
 
+PICKLE_PROTOCOL = 3
+
+
 def log(msg):
-    print msg
+    print(msg)
 
 
 def chunks(arr, size):
     """
-    >>> for chunk in chunks([1,2,3,4,5], 2): print chunk
+    >>> for chunk in chunks([1,2,3,4,5], 2): print(chunk)
     [1, 2]
     [3, 4]
     [5]
     """
-    for i in xrange(0, len(arr), size):
+    for i in range(0, len(arr), size):
         yield arr[i:i + size]
 
 
@@ -26,7 +29,7 @@ class Sound(object):
         self.chunk_size = 1000
         self.format = pyaudio.paInt16
         self.channels = 1
-        self.rate = 8000
+        self.rate = 48000
         self.record_seconds = 5
         self.frames = b''
 
@@ -133,19 +136,19 @@ class Sound(object):
         return self._pyaudio_obj.get_sample_size(self.format)
 
     def _generate_symbols(self):
-        return ''.join(random.choice(self.alphabet) for _ in xrange(self.symbols_in_session))
+        return ''.join(random.choice(self.alphabet) for _ in range(self.symbols_in_session))
 
 
 def record():
     sound = Sound()
     sound.record()
     data = sound.get_data()
-    with open('output', 'w') as f:
-        pickle.dump(data, f)
+    with open('output', 'wb') as f:
+        pickle.dump(data, f, protocol=PICKLE_PROTOCOL)
 
 
 def play():
-    with open('output', 'r') as f:
+    with open('output', 'rb') as f:
         data = pickle.load(f)
     sound = Sound()
     sound.set_data(data)
