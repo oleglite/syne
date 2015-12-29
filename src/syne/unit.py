@@ -14,22 +14,23 @@ class Unit(object):
         self.incubator = Incubator(conf)
         self.core = Core(conf)
 
-    def activate(self, signals, prediction=None):
+    def activate(self, signals, prediction=None, learn=True):
         """
         message: matrix
         prediction: vector
         return: vector or None
 
         :param signals: any iterable with input signals
+        :param learn: (bool) if True learn patterns with this signals
         :return (tuple) output signal
         """
         assert all(signals), "Can't activate None signals"
         message_matrix = Matrix(signals)
 
-        output_signal = self.core.activate(message_matrix, prediction)
+        output_signal = self.core.activate(message_matrix, prediction, learn=learn)
         output_activity = avg(output_signal) if output_signal else 0
 
-        if output_activity < self.conf.UNIT_ACTIVE_SIGNAL_ACTIVITY:
+        if learn and output_activity < self.conf.UNIT_ACTIVE_SIGNAL_ACTIVITY:
             new_patterns = self.incubator.add(message_matrix)
             self.core.add_patterns(new_patterns)
             return None
@@ -50,5 +51,11 @@ class Unit(object):
         if not any(signal is None for signal in signals):
             return signals
 
-        # TODO: first need to implement in Core to allow None signals in message
-        pass
+        default_signal = (0,) * self.conf.UNIT_INPUT_WIDTH
+        filled_signals = tuple(s or default_signal for s in signals)
+
+        output_signal = self.activate(filled_signals, learn=False)
+        decoded_signals = self.decode(output_signal)
+
+        result_signals = tuple(s or decoded_signals[i] for i, s in enumerate(signals))
+        return result_signals
