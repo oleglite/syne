@@ -46,12 +46,12 @@ class Matrix:
         return (self.col(i) for i in range(self.w))
 
     def get_data(self):
-        return self._data
+        return tuple(map(tuple, self._data))
 
     def __eq__(self, other):
         if type(other) != type(self):
             return False
-        return self._data == other.get_data()
+        return self.get_data() == other.get_data()
 
     def __len__(self):
         return self.h
