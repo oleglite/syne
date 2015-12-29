@@ -39,3 +39,18 @@ def from_plain_signal(plain_signal, total_length):
     :return: signal where one impulse equals to 1, the rest to 0
     """
     return tuple(1.0 if i == plain_signal else 0 for i in range(total_length))
+
+
+def to_plain_signal(signal):
+    """
+    >>> to_plain_signal((0.6, 0.2, 0.8, 0.7))
+    2
+    >>> to_plain_signal((0.0, 0.1, 0.1))
+    1
+    >>> to_plain_signal((0.0, 0.0, 0.0))
+
+    :param signal:
+    :return: index of max value or None if all values is 0
+    """
+    max_value = max(signal)
+    return signal.index(max_value) if max_value else None

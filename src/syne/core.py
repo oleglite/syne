@@ -51,7 +51,7 @@ class Core(object):
         if not candidates:
             return None
 
-        return max(candidates, key=lambda a, _: a)[1]
+        return max(candidates, key=lambda item: item[0])[1]
 
     def add_patterns(self, new_patterns):
         for pattern in new_patterns:

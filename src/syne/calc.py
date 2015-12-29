@@ -34,10 +34,16 @@ class Matrix:
         return self._data[x][y]
 
     def row(self, y):
-        return self._data[y]
+        return tuple(self._data[y])
 
     def col(self, x):
-        return list(v[x] for v in self._data)
+        return tuple(v[x] for v in self._data)
+
+    def rows(self):
+        return (self.row(i) for i in range(self.h))
+
+    def cols(self):
+        return (self.col(i) for i in range(self.w))
 
     def get_data(self):
         return self._data
