@@ -1,7 +1,10 @@
 # coding: utf-8
 
-from syne.calc import matrix_similarity, matrix_multiply
+from itertools import chain, starmap
+
+from syne.calc import matrix_multiply
 from syne.store import Store
+from syne.tools import avg
 
 
 class Core(object):
@@ -35,7 +38,7 @@ class Core(object):
     def _activate(self, message):
         result_signal = [0.0] * self.conf.UNIT_OUTPUT_WIDTH
         for i, pattern in enumerate(self._patterns_store.get_objects()):
-            activity = matrix_similarity(message, pattern)
+            activity = avg(starmap(signals_similarity, zip(message.rows(), pattern.rows())))
             result_signal[i] = activity
 
         activated = any(a >= self.conf.UNIT_ACTIVE_SIGNAL_ACTIVITY for a in result_signal)
@@ -66,3 +69,15 @@ class Core(object):
                 self._patterns_store.increase(i)
 
         self._patterns_store.normalize()
+
+
+def signals_similarity(s1, s2):
+    """
+    :param s1: signal 1
+    :param s2: signal 2
+    :return: signals similarity
+    """
+    s_min = sum(map(min, zip(s1, s2)))
+    s_max = sum(map(max, zip(s1, s2)))
+    limit = max(chain(s1, s2))
+    return (limit * s_min / s_max) if s_max else 0.0

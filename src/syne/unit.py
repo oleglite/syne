@@ -1,6 +1,5 @@
 from syne.core import Core
 from syne.incubator import Incubator
-from syne.tools import avg
 from syne.calc import Matrix
 
 
@@ -28,7 +27,7 @@ class Unit(object):
         message_matrix = Matrix(signals)
 
         output_signal = self.core.activate(message_matrix, prediction, learn=learn)
-        output_activity = avg(output_signal) if output_signal else 0
+        output_activity = max(output_signal) if output_signal else 0
 
         if learn and output_activity < self.conf.UNIT_ACTIVE_SIGNAL_ACTIVITY:
             new_patterns = self.incubator.add(message_matrix)
@@ -42,7 +41,7 @@ class Unit(object):
         :param signal: list of activities
         :return tuple of signals or None
         """
-        assert signal, "Can't decode None siganl"
+        assert signal, "Can't decode None signal"
 
         message = self.core.decode(signal)
         return message.get_data() if message else None

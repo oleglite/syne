@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from syne.calc import (similarity, matrix_similarity, Matrix, limited_add, matrix_multiply,
+from syne.calc import (similarity, Matrix, limited_add, matrix_multiply,
                        braking_add)
 
 
@@ -22,56 +22,6 @@ def test_similarity():
         [2, 1],
     )
     assert 0.49 < sim < 0.51
-
-
-def test_matrix_similarity():
-    sim = matrix_similarity(
-        Matrix([
-            [0.1, 0.1],
-            [0.1, 0.1],
-        ]),
-        Matrix([
-            [0.1, 0.1],
-            [0.1, 0.1],
-        ]),
-    )
-    assert 0.9999 < sim <= 1.0, 'equal matrixes'
-
-    sim = matrix_similarity(
-        Matrix([
-            [0.0, 0.0],
-            [0.0, 0.0],
-        ]),
-        Matrix([
-            [1.0, 1.0],
-            [1.0, 1.0],
-        ]),
-    )
-    assert 0.0 <= sim < 0.00001, 'max difference'
-
-    sim1 = matrix_similarity(
-        Matrix([
-            [0.1, 0.1],
-            [0.1, 0.1],
-        ]),
-        Matrix([
-            [0.1, 0.1],
-            [0.2, 0.1],
-        ]),
-    )
-    sim2 = matrix_similarity(
-        Matrix([
-            [0.1, 0.1],
-            [0.1, 0.1],
-        ]),
-        Matrix([
-            [0.1, 0.2],
-            [0.2, 0.1],
-        ]),
-    )
-    assert 0.01 < sim1 < 0.99
-    assert 0.01 < sim2 < 0.99
-    assert sim1 > sim2
 
 
 def test_limited_add():

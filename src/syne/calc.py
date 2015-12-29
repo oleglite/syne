@@ -1,4 +1,3 @@
-from itertools import chain
 from pprintpp import pformat
 
 from syne.tools import avg
@@ -58,19 +57,6 @@ class Matrix:
 
     def __repr__(self):
         return 'Matrix(%s)' % pformat(self._data)
-
-
-def matrix_similarity(m1, m2):
-    assert m1.w == m2.w and m1.h == m2.h, 'Matrixes should have same size'
-
-    it1 = chain(*m1.get_data())
-    it2 = chain(*m2.get_data())
-
-    # compare matrix cells with same coords
-    difs = ((x - y) ** 2 for x, y in zip(it1, it2))
-    res = 1 - avg(difs) ** 0.5
-    assert 0 <= res <= 1, 'Similarity should be in range from 0 to 1'
-    return res
 
 
 def similarity(it1, it2):

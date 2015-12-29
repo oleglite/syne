@@ -33,6 +33,8 @@ def test_unit_activate_decode():
     plain_message = list(map(to_plain_signal, decoded_message))
     assert plain_message == [0, 1]
 
+    assert len(output_signal) == 4
+
 
 def test_unit_restore():
     unit = Unit(get_conf(
