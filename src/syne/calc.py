@@ -27,10 +27,10 @@ class Matrix:
         return cls([[values] * w for _ in range(h)])
 
     def set(self, x, y, value):
-        self._data[x][y] = value
+        self._data[y][x] = value
 
     def get(self, x, y):
-        return self._data[x][y]
+        return self._data[y][x]
 
     def row(self, y):
         return tuple(self._data[y])
@@ -64,7 +64,15 @@ def similarity(it1, it2):
 
 
 def braking_add(a, b):
+    assert 0 <= a <= 1
+    assert 0 <= b <= 1
     return a + (1 - a) * b
+
+
+def braking_sub(a, b):
+    assert 0 <= a <= 1
+    assert 0 <= b <= 1
+    return a - a * b
 
 
 def limited_add(a, b, min_result, max_result):

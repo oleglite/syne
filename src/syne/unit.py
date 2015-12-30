@@ -29,7 +29,7 @@ class Unit(object):
         output_signal = self.core.activate(message_matrix, prediction, learn=learn)
         output_activity = max(output_signal) if output_signal else 0
 
-        if learn and output_activity < self.conf.UNIT_ACTIVE_SIGNAL_ACTIVITY:
+        if learn and output_activity < self.conf.UNIT_ACTIVATION_THRESHOLD:
             new_patterns = self.incubator.add(message_matrix)
             self.core.add_patterns(new_patterns)
             return None
@@ -53,8 +53,18 @@ class Unit(object):
         default_signal = (0,) * self.conf.UNIT_INPUT_WIDTH
         filled_signals = tuple(s or default_signal for s in signals)
 
-        output_signal = self.activate(filled_signals, learn=False)
-        decoded_signals = self.decode(output_signal)
+        activation_threshold = self.conf.UNIT_ACTIVATION_THRESHOLD
+        activation_threshold *= 1 - (signals.count(None) / len(signals))
 
+        output_signal = self.core.activate(
+            Matrix(filled_signals), learn=False, activation_threshold=activation_threshold
+        )
+        decoded_message = self.core.decode(output_signal, activation_threshold=activation_threshold)
+
+        if not decoded_message:
+            print('WARNING: failed to restore message')
+            return filled_signals
+
+        decoded_signals = decoded_message.get_data()
         result_signals = tuple(s or decoded_signals[i] for i, s in enumerate(signals))
         return result_signals

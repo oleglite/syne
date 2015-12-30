@@ -1,7 +1,7 @@
 # coding: utf-8
 
 from syne.calc import (similarity, Matrix, limited_add, matrix_multiply,
-                       braking_add)
+                       braking_add, braking_sub)
 
 
 def test_similarity():
@@ -38,6 +38,15 @@ def test_braking_add():
     assert braking_add(0.5, 0.5) == 0.75
     assert braking_add(0.1, 0.1) == 0.19
     assert braking_add(0.9, 0.1) == 0.91
+
+
+def test_braking_sub():
+    assert braking_sub(0, 0) == 0
+    assert braking_sub(1, 1) == 0
+    assert braking_sub(1, 0) == 1
+    assert braking_sub(0, 1) == 0
+    assert braking_sub(0.5, 0.5) == 0.25
+    assert braking_sub(0.9, 0.1) == 0.81
 
 
 def test_matrix_multiply():

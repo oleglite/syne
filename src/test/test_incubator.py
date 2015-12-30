@@ -147,7 +147,7 @@ def test_incubator_create_pattern_2x3():
 
 def test_incubator_create_pattern_from_several_samples():
     incubator = Incubator(get_conf(
-        INCUBATOR_READY_SAMPLE_WEIGHT=1,   # doesn't create patterns
+        INCUBATOR_READY_SAMPLE_WEIGHT=0.9,
         INCUBATOR_ACTIVITY_THRESHOLD=0.5,
         INCUBATOR_MIN_SAMPLE_IMPULSES=1,
         INCUBATOR_NEW_PATTERN_IMPULSE_WEIGHT=0.7,
