@@ -1,5 +1,7 @@
 # coding: utf-8
 
+from pprintpp import pformat
+
 
 def avg(it):
     try:
@@ -54,3 +56,55 @@ def to_plain_signal(signal):
     """
     max_value = max(signal)
     return signal.index(max_value) if max_value else None
+
+
+class Buffer:
+    """
+    Helper class to store fixed amount of values
+
+    >>> Buffer([1, 2])
+    Buffer([1, 2])
+    >>> Buffer([], size=3)
+    Buffer([None, None, None])
+    >>> Buffer([1, 2, 3], size=3)
+    Buffer([1, 2, 3])
+    >>> Buffer([1, 2], size=3)
+    Buffer([None, 1, 2])
+    >>> Buffer([1, 2, 3, 4], size=3)
+    Buffer([2, 3, 4])
+    """
+
+    DEFAULT_VALUE = None
+
+    def __init__(self, seq, size=None):
+        values = list(seq)
+        self._size = len(values) if size is None else size
+        self._buffer = values
+
+        while len(self._buffer) > self._size:
+            self._buffer.pop(0)
+
+        while len(self._buffer) < self._size:
+            self._buffer.insert(0, self.DEFAULT_VALUE)
+
+    def push(self, value):
+        """
+        :param value:
+        :return:
+
+        >>> buffer = Buffer([1, 2, 3])
+        >>> buffer.push(4)
+        >>> buffer
+        Buffer([2, 3, 4])
+        """
+        self._buffer.append(value)
+        self._buffer.pop(0)
+
+    def __iter__(self):
+        return iter(self._buffer)
+
+    def __len__(self):
+        return self._size
+
+    def __repr__(self):
+        return 'Buffer(%s)' % pformat(self._buffer)

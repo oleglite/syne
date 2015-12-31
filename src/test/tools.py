@@ -19,6 +19,8 @@ def get_conf(**kwargs):
         INCUBATOR_NEW_PATTERN_IMPULSE_WEIGHT = 0.7
         INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY = 0.6
 
+        TIME_UNIT_BASE_SIGNALS_NUMBER = 1
+
     for kwarg, value in kwargs.items():
         setattr(conf, kwarg, value)
 

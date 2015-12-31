@@ -17,7 +17,7 @@ def test_unit_activate_decode():
             from_plain_signal(i % 4, 4),
             from_plain_signal((i + 1) % 4, 4),
         )
-        for i in range(1000)
+        for i in range(100)
     ]
 
     for message in messages:
@@ -48,7 +48,7 @@ def test_unit_restore():
             from_plain_signal(i % 4, 4),
             from_plain_signal((i + 1) % 4, 4),
         )
-        for i in range(1000)
+        for i in range(100)
     ]
 
     for message in messages:

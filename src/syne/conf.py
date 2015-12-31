@@ -38,3 +38,6 @@ INCUBATOR_NEW_PATTERN_IMPULSE_WEIGHT = 0.7
 # When incubator creates pattern, all samples that have this similarity with base sample will be
 # added to pattern
 INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY = 0.6
+
+# Number of signals that will be used for prediction, must be less than UNIT_INPUT_HEIGHT
+TIME_UNIT_BASE_SIGNALS_NUMBER = 3
