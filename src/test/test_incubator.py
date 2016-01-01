@@ -13,7 +13,6 @@ def test_make_samples():
 
     assert dict(samples) == {
         (None, 0): 0.45,    # 0.1 0.9
-        (None, None): 0,    # 0.1 0.3
         (1, 0): 0.8,        # 0.7 0.9
         (1, None): 0.35,    # 0.7 0.3
     }
@@ -42,6 +41,8 @@ def test_make_samples_2x3():
 
         ((1, None, 0), 0.5),    # 0.9 0.3 0.6
         ((1, None, 1), 0.6),    # 0.9 0.3 0.9
+
+        ((1, None, None), 0.3),    # 0.9 None None
     ]
 
     for sample, weight in samples:
@@ -58,7 +59,7 @@ def test_make_samples_2x3():
 def test_incubator_create_samples():
     incubator = Incubator(get_conf(
         INCUBATOR_READY_SAMPLE_WEIGHT=999,   # doesn't create patterns
-        INCUBATOR_ACTIVITY_THRESHOLD=0.5,
+        INCUBATOR_IMPULSE_ACTIVITY_THRESHOLD=0.5,
         INCUBATOR_MIN_SAMPLE_IMPULSES=1,
     ))
     result = incubator.add(Matrix([
@@ -76,7 +77,7 @@ def test_incubator_create_samples():
 def test_incubator_create_samples_min_impulses_filter():
     incubator = Incubator(get_conf(
         INCUBATOR_READY_SAMPLE_WEIGHT=999,   # doesn't create patterns
-        INCUBATOR_ACTIVITY_THRESHOLD=0.5,
+        INCUBATOR_IMPULSE_ACTIVITY_THRESHOLD=0.5,
         INCUBATOR_MIN_SAMPLE_IMPULSES=2,
     ))
     result = incubator.add(Matrix([
@@ -92,7 +93,7 @@ def test_incubator_create_samples_min_impulses_filter():
 def test_incubator_create_pattern():
     incubator = Incubator(get_conf(
         INCUBATOR_READY_SAMPLE_WEIGHT=1,   # doesn't create patterns
-        INCUBATOR_ACTIVITY_THRESHOLD=0.5,
+        INCUBATOR_IMPULSE_ACTIVITY_THRESHOLD=0.5,
         INCUBATOR_MIN_SAMPLE_IMPULSES=1,
         INCUBATOR_NEW_PATTERN_IMPULSE_WEIGHT=0.7,
         INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY=0.6,
@@ -118,7 +119,7 @@ def test_incubator_create_pattern_2x3():
         UNIT_INPUT_HEIGHT=2,
         UNIT_INPUT_WIDTH=3,
         INCUBATOR_READY_SAMPLE_WEIGHT=1,   # doesn't create patterns
-        INCUBATOR_ACTIVITY_THRESHOLD=0.5,
+        INCUBATOR_IMPULSE_ACTIVITY_THRESHOLD=0.5,
         INCUBATOR_MIN_SAMPLE_IMPULSES=1,
         INCUBATOR_NEW_PATTERN_IMPULSE_WEIGHT=0.7,
         INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY=0.6,
@@ -148,7 +149,7 @@ def test_incubator_create_pattern_2x3():
 def test_incubator_create_pattern_from_several_samples():
     incubator = Incubator(get_conf(
         INCUBATOR_READY_SAMPLE_WEIGHT=0.9,
-        INCUBATOR_ACTIVITY_THRESHOLD=0.5,
+        INCUBATOR_IMPULSE_ACTIVITY_THRESHOLD=0.5,
         INCUBATOR_MIN_SAMPLE_IMPULSES=1,
         INCUBATOR_NEW_PATTERN_IMPULSE_WEIGHT=0.7,
         INCUBATOR_NEW_PATTERN_SIMILAR_SAMPLES_ACTIVITY=0.3,

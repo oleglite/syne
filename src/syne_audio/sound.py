@@ -148,11 +148,12 @@ def record():
 
 
 def play():
-    with open('output', 'rb') as f:
+    with open('../output', 'rb') as f:
         data = pickle.load(f)
     sound = Sound()
     sound.set_data(data)
     sound.play()
+    print(len(data['audio']['frames']))
 
 
 if __name__ == '__main__':

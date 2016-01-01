@@ -42,7 +42,7 @@ class Incubator(object):
     def _update_samples(self, message):
         min_impulses = self.conf.INCUBATOR_MIN_SAMPLE_IMPULSES
 
-        samples = make_samples(self.conf.INCUBATOR_ACTIVITY_THRESHOLD, message)
+        samples = make_samples(self.conf.INCUBATOR_IMPULSE_ACTIVITY_THRESHOLD, message)
 
         # filter samples with lots of Nones
         samples = ((s, a) for s, a in samples if len(s) - s.count(None) >= min_impulses)
@@ -88,8 +88,13 @@ class Incubator(object):
 def make_samples(threshold, message):
     assert message, "Message can't be empty"
 
-    for impulses in product(range(message.w), repeat=message.h):
-        values = [message.get(i, n) for n, i in enumerate(impulses)]
-        sample = tuple(i if v >= threshold else None for v, i in zip(values, impulses))
-        activity = avg(v if v >= threshold else 0 for v in values)
-        yield sample, activity
+    active_impulses = [
+        [i for i, a in enumerate(row) if a >= threshold] + [None]
+        for row in message.rows()
+    ]
+
+    for sample in product(*active_impulses):
+        values = [message.get(x, y) if x is not None else 0 for y, x in enumerate(sample)]
+        activity = avg(values)
+        if activity:
+            yield sample, activity

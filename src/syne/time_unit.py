@@ -9,7 +9,7 @@ class TimeUnit:
     This type of unit accepts only one signal per activation, but can predict next signals
     """
     def __init__(self, conf):
-        assert conf.TIME_UNIT_BUFFER_SIZE <= conf.UNIT_INPUT_HEIGHT
+        assert conf.TIME_UNIT_BASE_SIGNALS_NUMBER <= conf.UNIT_INPUT_HEIGHT
 
         self.conf = conf
         self.unit = Unit(conf)

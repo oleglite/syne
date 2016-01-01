@@ -1,15 +1,17 @@
-from syne.unit import Unit
+from syne.time_unit import TimeUnit
+from syne.space_unit import SpaceUnit
 from syne import conf as default_conf
 from syne.tools import dict_to_object, object_to_dict
 
 
 __all__ = (
-    'Unit',
-    'get_conf'
+    'TimeUnit',
+    'SpaceUnit',
+    'make_conf'
 )
 
 
-def get_conf(*args, **kwargs):
+def make_conf(*args, **kwargs):
     """
     1. get_conf(conf_module)
     2. get_conf(key=value, ...)
