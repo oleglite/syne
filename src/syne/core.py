@@ -2,22 +2,34 @@
 
 from itertools import chain, starmap
 
-from syne.calc import matrix_multiply, braking_add, braking_sub
+from syne.calc import Matrix, matrix_multiply, braking_add, braking_sub
 from syne.store import Store
 from syne.tools import avg
 
 
 class Core(object):
-    def __init__(self, conf):
+    KEY = 'core'
+
+    def __init__(self, conf, data=None):
         self.conf = conf
 
+        patterns = map(Matrix, data['patterns']) if data else []
+        pattern_weights = data['pattern_weights'] if data else []
+
         self._patterns_store = Store(
-            [], [],
+            patterns, pattern_weights,
             self.conf.UNIT_OUTPUT_WIDTH,
             min_weight=self.conf.UNIT_MIN_PATTERN_WEIGHT,
             max_weight=self.conf.UNIT_MAX_PATTERN_WEIGHT,
             average_weight=self.conf.UNIT_AVERAGE_PATTERN_WEIGHT
         )
+
+    def get_data(self):
+        return {
+            '_key': self.KEY,
+            'patterns': [p.get_data() for p in self._patterns_store.get_objects()],
+            'pattern_weights': self._patterns_store.get_weights()
+        }
 
     def activate(self, message, prediction=None, learn=True, activation_threshold=None):
         """

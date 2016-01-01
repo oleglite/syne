@@ -4,9 +4,21 @@ from syne.unit import Unit
 
 
 class SpaceUnit:
-    def __init__(self, conf):
+    KEY = 'space_unit'
+
+    def __init__(self, conf, data=None):
         self.conf = conf
-        self.unit = Unit(conf)
+
+        if data:
+            self.unit = Unit(conf, data=data['unit'])
+        else:
+            self.unit = Unit(conf)
+
+    def get_data(self):
+        return {
+            '_key': self.KEY,
+            'unit': self.unit.get_data(),
+        }
 
     def activate(self, signals, learn=True):
         return self.unit.activate(signals, learn=learn)

@@ -7,11 +7,24 @@ class Unit(object):
     """
     Note: Input for Unit is signals but not Matrix object because signal can be None
     """
-    def __init__(self, conf):
+    KEY = 'unit'
+
+    def __init__(self, conf, data=None):
         self.conf = conf
 
-        self.incubator = Incubator(conf)
-        self.core = Core(conf)
+        if data:
+            self.incubator = Incubator(conf, data=data['incubator'])
+            self.core = Core(conf, data=data['core'])
+        else:
+            self.incubator = Incubator(conf)
+            self.core = Core(conf)
+
+    def get_data(self):
+        return {
+            '_key': self.KEY,
+            'incubator': self.incubator.get_data(),
+            'core': self.core.get_data()
+        }
 
     def activate(self, signals, prediction=None, learn=True):
         """

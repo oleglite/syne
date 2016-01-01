@@ -8,13 +8,25 @@ class TimeUnit:
     """
     This type of unit accepts only one signal per activation, but can predict next signals
     """
-    def __init__(self, conf):
+    KEY = 'time_unit'
+
+    def __init__(self, conf, data=None):
         assert conf.TIME_UNIT_BASE_SIGNALS_NUMBER <= conf.UNIT_INPUT_HEIGHT
 
         self.conf = conf
-        self.unit = Unit(conf)
+
+        if data:
+            self.unit = Unit(conf, data=data['unit'])
+        else:
+            self.unit = Unit(conf)
 
         self._buffer = Buffer([], size=self.conf.UNIT_INPUT_HEIGHT)
+
+    def get_data(self):
+        return {
+            '_key': self.KEY,
+            'unit': self.unit.get_data(),
+        }
 
     def activate(self, signal, learn=True):
         """

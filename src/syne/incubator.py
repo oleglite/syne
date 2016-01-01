@@ -6,15 +6,25 @@ from syne.tools import avg
 
 
 class Incubator(object):
-    def __init__(self, conf, samples=None):
+    KEY = 'incubator'
+
+    def __init__(self, conf, samples=None, data=None):
         self.conf = conf
         self._samples = defaultdict(float)     # {sample: weight}
 
-        if samples:
+        if data:
+            self._samples.update(data['samples'])
+        elif samples:
             self._samples.update(samples)
 
     def get_samples(self):
         return dict(self._samples)
+
+    def get_data(self):
+        return {
+            '_key': self.KEY,
+            'samples': dict(self._samples)
+        }
 
     def add(self, message):
         """
