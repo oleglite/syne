@@ -2,7 +2,7 @@
 
 from syne.unit import Unit
 from syne.tools import from_plain_signal, to_plain_signal
-from test.tools import get_conf
+from .tools import get_conf
 
 
 def test_unit_activate_decode():

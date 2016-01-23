@@ -82,15 +82,15 @@ class Incubator(object):
         pattern = Matrix.create(self.conf.UNIT_INPUT_HEIGHT, self.conf.UNIT_INPUT_WIDTH)
         for y, impulse in enumerate(base_sample):
             if impulse is not None:
-                pattern.set(impulse, y, base_weight)
+                pattern.set(y, impulse, base_weight)
 
         # add similar samples to pattern
         for sample, sample_weight in similar_samples.items():
             adding_weight = sample_weight / base_sample_weight * base_weight
             for y, impulse in enumerate(sample):
                 if impulse is not None:
-                    new_weight = braking_add(pattern.get(impulse, y), adding_weight)
-                    pattern.set(impulse, y, new_weight)
+                    new_weight = braking_add(pattern.get(y, impulse), adding_weight)
+                    pattern.set(y, impulse, new_weight)
 
         return pattern
 
@@ -104,7 +104,7 @@ def make_samples(threshold, message):
     ]
 
     for sample in product(*active_impulses):
-        values = [message.get(x, y) if x is not None else 0 for y, x in enumerate(sample)]
+        values = [message.get(y, x) if x is not None else 0 for y, x in enumerate(sample)]
         activity = avg(values)
         if activity:
             yield sample, activity

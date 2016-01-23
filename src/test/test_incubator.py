@@ -2,7 +2,11 @@
 
 from syne.calc import Matrix
 from syne.incubator import Incubator, make_samples
-from test.tools import get_conf
+from .tools import get_conf
+
+
+def almost_equal(v1, v2):
+    return abs(v1 - v2) < 0.000001
 
 
 def test_make_samples():
@@ -11,11 +15,14 @@ def test_make_samples():
         [0.9, 0.3],
     ]))
 
-    assert dict(samples) == {
+    expected = {
         (None, 0): 0.45,    # 0.1 0.9
         (1, 0): 0.8,        # 0.7 0.9
         (1, None): 0.35,    # 0.7 0.3
     }
+
+    for sample, weight in samples:
+        assert almost_equal(weight, expected[sample])
 
 
 def test_make_samples_2x3():

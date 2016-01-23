@@ -2,7 +2,7 @@
 
 from syne.time_unit import TimeUnit
 from syne.tools import from_plain_signal, to_plain_signal
-from test.tools import get_conf
+from .tools import get_conf
 
 
 def test_time_unit_prediction():

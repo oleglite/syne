@@ -1,10 +1,8 @@
 # coding: utf-8
 
-from itertools import chain, starmap
-
-from syne.calc import Matrix, matrix_multiply, braking_add, braking_sub
+from syne.calc import matrix_multiply
 from syne.store import Store
-from syne.tools import avg
+from synemx import Matrix
 
 
 class Core(object):
@@ -54,7 +52,7 @@ class Core(object):
 
         result_signal = [0.0] * self.conf.UNIT_OUTPUT_WIDTH
         for i, pattern in enumerate(self._patterns_store.get_objects()):
-            activity = avg(starmap(signals_similarity, zip(message.rows(), pattern.rows())))
+            activity = message.average_similarity(pattern)
             result_signal[i] = activity
 
         activated = (max(result_signal) >= activation_threshold)
@@ -86,42 +84,6 @@ class Core(object):
             if activity == max_activity:
                 self._patterns_store.increase(i)
                 pattern = self._patterns_store.get_objects()[i]
-                pattern_learn(message, pattern, activity * self.conf.UNIT_LEARNING_FACTOR)
+                pattern.approximate(message, activity * self.conf.UNIT_LEARNING_FACTOR)
 
         self._patterns_store.normalize()
-
-
-def signals_similarity(s1, s2):
-    """
-    :param s1: signal 1
-    :param s2: signal 2
-    :return: signals similarity
-    """
-    s_min = sum(map(min, zip(s1, s2)))
-    s_max = sum(map(max, zip(s1, s2)))
-    limit = max(chain(s1, s2))
-    return (limit * s_min / s_max) if s_max else 0.0
-
-
-def pattern_learn(message, pattern, intensity):
-    """
-    Update pattern to better fit to message.
-
-    :param message: matrix to learn from
-    :param pattern: matrix to update
-    :param intensity: intensity of learning
-    """
-    assert 0 <= intensity <= 1
-    assert message.w == pattern.w and message.h == pattern.h
-
-    for x in range(message.w):
-        for y in range(pattern.h):
-            message_value = message.get(x, y)
-            pattern_value = pattern.get(x, y)
-
-            if message_value >= pattern_value:
-                new_pattern_value = braking_add(pattern_value, message_value * intensity)
-            else:
-                new_pattern_value = braking_sub(pattern_value, (pattern_value - message_value) * intensity)
-
-            pattern.set(x, y, new_pattern_value)
